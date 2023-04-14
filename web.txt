@@ -1,0 +1,36 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestRegressor
+
+# Create the dataset
+data = {'Year': [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023],
+        'Advertising Cost': [225, 240, 245, 250, 275, 280, 280, 290],
+        'Yearly Sale': [12000, 12445, 12556, 12500, 12787, 12856, 13010, 13020]}
+df = pd.DataFrame(data)
+
+# Split the data into X (features) and y (target)
+X = df.drop('Yearly Sale', axis=1)
+y = df['Yearly Sale']
+
+# Train a Random Forest Regressor with default hyperparameters
+rf_reg = RandomForestRegressor()
+rf_reg.fit(X, y)
+
+# Predict the sales for 2024 with 20% increase in advertising cost
+ad_cost_2023 = df['Advertising Cost'].iloc[-1]
+ad_cost_2024 = ad_cost_2023 * 1.2
+year_2024 = 2024
+X_2024 = pd.DataFrame({'Year': [year_2024], 'Advertising Cost': [ad_cost_2024]})
+y_2024 = rf_reg.predict(X_2024)
+
+# Print the predicted sales for 2024
+print(f'Predicted sales for {year_2024}: {y_2024[0]:.2f}')
+
+# Plot the scatter plot of the original data and the predicted value
+plt.scatter(df['Advertising Cost'], df['Yearly Sale'], label='Original Data')
+plt.scatter(ad_cost_2024, y_2024, label='Predicted Value')
+plt.xlabel('Advertising Cost')
+plt.ylabel('Yearly Sale')
+plt.title('Advertising Cost vs. Yearly Sale')
+plt.legend()
+plt.show()
